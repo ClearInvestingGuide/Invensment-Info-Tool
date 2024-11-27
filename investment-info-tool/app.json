@@ -1,0 +1,101 @@
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+
+const App = () => {
+  const [searchQuery, setSearchQuery] = useState(""); // User input
+  const [results, setResults] = useState([]); // Placeholder for fetched data
+  const [loading, setLoading] = useState(false); // Loading indicator
+
+  // Dummy function for search (to replace with API call later)
+  const fetchSearchResults = async () => {
+    setLoading(true);
+    // Simulated search results
+    const dummyResults = [
+      { id: "1", name: "Apple Inc. (AAPL)", price: "$174.56" },
+      { id: "2", name: "Microsoft Corp. (MSFT)", price: "$334.12" },
+    ];
+    setTimeout(() => {
+      setResults(dummyResults);
+      setLoading(false);
+    }, 2000); // Simulates a 2-second API call
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Investment Info Tool</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Enter stock/ETF/bond name or ticker..."
+        value={searchQuery}
+        onChangeText={(text) => setSearchQuery(text)}
+      />
+      <Button
+        title="Search"
+        onPress={fetchSearchResults}
+        disabled={!searchQuery}
+      />
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" style={styles.loading} />
+      ) : (
+        <FlatList
+          data={results}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.resultItem}>
+              <Text style={styles.resultName}>{item.name}</Text>
+              <Text style={styles.resultPrice}>{item.price}</Text>
+            </View>
+          )}
+        />
+      )}
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: "#fff",
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 10,
+    borderRadius: 8,
+  },
+  loading: {
+    marginTop: 20,
+  },
+  resultItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    paddingVertical: 10,
+  },
+  resultName: {
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  resultPrice: {
+    fontSize: 14,
+    color: "green",
+  },
+});
+
+export default App;
